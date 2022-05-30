@@ -1,0 +1,17 @@
+\chapter{Conclusioni}
+\label{chap:conclusioni}
+
+Volgendosi all'indietro, come per scorgere i propri passi, la strada percorsa è lunga. Tutto è iniziato dall'idea di poter interconnettere reti all'edge, complice anche il repentino aumento del traffico nazionale dovuto alla pandemia, riscoprendo il vecchio detto \textit{\eng{``keep the local traffic local''}}. La vera sfida però era riuscirvi con un'infrastruttura completamente virtuale. Questo ha significato dover approfondire framework prima sconosciuti come VPP e DPDK, nonché studiare i meccanismi di virtualizzazione ed il funzionamento del kernel Linux che oggi sono alla base del mondo cloud. L'esperienza è culminata con una prova sul campo di quanto appreso, da cui sono emerse nuove problematiche e nuove conoscenze. Sono grato ai miei relatori per avermi sostenuto e guidato in questo cammino lungo e colmo di soddisfazioni.
+
+\section{Sviluppi futuri}
+
+Di tutte le funzioni che si possono virtualizzare, il puro routing è forse una delle meno sensate: al crescere del traffico, oltre qualche decina di Gigabit al secondo, diventa economicamente sconveniente -- sia in termini di costo capitale che di costo energetico per traffico trasferito -- affidarsi a soluzioni interamente virtuali. Inoltre, l'elevata preparazione richiesta in termini di forza lavoro è difficile da reperire sul mercato. A chi, nonostante ciò, volesse dedicarvisi, magari per interesse accademico o più semplice anticonformismo, consiglio di sfruttare quanto descritto in queste pagine per ripartire dal basso: cominciare da un sistema operativo nudo sul quale avere maggiore controllo delle diverse componenti software, magari basandosi su qualche distribuzione ``rolling'' di Linux. TNSR si è rivelato un buon prodotto con cui iniziare, ma al crescere delle difficoltà il funzionamento interno è difficile da indagare senza supporto commerciale. Un altro consiglio è quello di consultare i manuali Red Hat riguardo a KVM: sono molto curati e trattano in maniera approfondita tutti i temi legati alla virtualizzazione. Altra fonte importante è il blog di Pim van Pelt, vera miniera di informazioni.
+
+Vi è poi tutta la classe di ottimizzazioni legate all'utilizzo dei canali di memoria per trasferire parallelamente pacchetti senza che questi si accavallino tra banchi diversi, sprecando banda: a fianco dell'analisi teorica è fondamentale affinare il setup pratico in funzione della piattaforma hardware usata. I manuali di DPDK coprono questi temi in maniera esaustiva.
+% purtroppo non ho avuto tempo di vedere questi temi con la dovuta attenzione, ma i manuali di DPDK li coprono in maniera esaustiva.
+
+% Infine, dopo aver padroneggiato l'architettura virtuale, ci si può cimentare con l'orchestrazione vera e propria, l'automazione e la necessaria manutenzione di un'infrastruttura operativa in produzione. Io mi fermo qui, sperando di aver stuzzicato il vostro interesse e la passione che ci accomuna.
+
+Infine, con un'infrastruttura virtuale di grandi dimensioni diventa imprescindibile adottare un sistema di orchestrazione e automazione: su questo punto l'esperienza maturata a livello industriale e non è sufficientemente ampia, essendo la virtualizzazione un approccio standard da ormai molti anni.
+
+Io mi fermo qui, sperando di aver stuzzicato il vostro interesse e la passione che ci accomuna.

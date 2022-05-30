@@ -1,0 +1,81 @@
+%% For normal draft builds (figs undisplayed hence fast compile)
+%\documentclass[hyperpdf,nobind,draft,oneside]{hepthesis}
+%\documentclass[hyperpdf,nobind,draft,twoside]{hepthesis}
+
+%% For short draft builds (breaks citations by necessity)
+%\documentclass[hyperpdf,nobind,draft,hidefrontback]{hepthesis}
+
+%%For Cambridge soft-bound version
+\documentclass[bindnopdf]{heptesi}
+%% For Cambridge hard-bound version (must be one-sided)
+%\documentclass[hyperpdf,oneside]{hepthesis}
+
+\newcommand{\mg}[1]{{\color{blue}{[Michele: #1]}}}
+
+%% Load special font packages here if you wish
+%\usepackage{lmodern}
+\usepackage{mathpazo}
+%\usepackage{euler}
+
+%% Put package includes etc. into preamble.tex for convenience
+\input{preamble}
+
+%% You can set the line spacing this way
+%\setallspacing{double}
+%% or a section at a time like this
+%\setfrontmatterspacing{double}
+
+
+%% Define the thesis title and author
+% \title{}
+% \author{}
+
+%% Qua c'è una guida di hepthesis (https://ctan.org/pkg/hepthesis)
+%% https://ctan.mirror.garr.it/mirrors/ctan/macros/latex/contrib/hepthesis/hepthesis.pdf
+
+%% Doc-specific PDF metadata
+\makeatletter
+\@ifpackageloaded{hyperref}{%
+\hypersetup{%
+  pdftitle = {Virtualizzazione di Funzioni di Rete},
+  pdfsubject = {Network Functions Virtualization},
+  pdfkeywords = {NFV, SDN, KVM, DPDK, VPP},
+  pdfauthor = {\textcopyright\ Samuele Pilleri}
+}}{}
+\makeatother
+
+
+%% Start the document
+\begin{document}
+
+%% Define the un-numbered front matter (cover pages, rubrik and table of contents)
+\begin{frontmatter}
+  \input{chapters/frontespizio}
+  
+  \input{chapters/frontmatter}
+\end{frontmatter}
+
+%% Start the content body of the thesis
+\begin{mainmatter}
+  \input{chapters/chap01-intro}
+  \input{chapters/chap02-software}
+  \input{chapters/chap03-virt}
+  \input{chapters/chap04-lab}
+  \input{chapters/chap05-conclusioni}
+  
+  % Leave an empty line here or LaTeX will complain
+\end{mainmatter}
+
+%% Produce the appendices
+\begin{appendices}
+  \input{chapters/appendices}
+\end{appendices}
+
+%% Produce the un-numbered back matter (e.g. colophon,
+%% bibliography, tables of figures etc., index...)
+\begin{backmatter}
+  \input{chapters/backmatter}
+\end{backmatter}
+
+%% Close
+\end{document}

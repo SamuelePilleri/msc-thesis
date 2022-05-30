@@ -1,0 +1,243 @@
+\chapter{Configurazioni}
+\label{chap:config}
+
+\section{10 Gbps line rate}
+
+\begin{lstlisting}
+configuration history enable
+
+nacm disable
+nacm read-default deny
+nacm write-default deny
+nacm exec-default deny
+nacm group admin
+    member root
+    member tnsr
+exit
+nacm rule-list admin-rules
+    group admin
+    rule permit-all
+        module *
+        access-operations *
+        action permit
+    exit
+exit
+nacm enable
+
+dataplane cpu workers 4
+dataplane ethernet default-mtu 9000
+dataplane dpdk dev 0000:07:00.0 network num-rx-queues 4
+dataplane dpdk uio-driver igb_uio
+dataplane buffers buffers-per-numa 32768
+dataplane statseg heap-size 96M
+
+
+nat global-options nat44 max-translations-per-thread 128000
+nat global-options nat44 enabled false
+
+interface TenGigabitEthernet7/0/0
+    enable
+    ip address 10.10.10.1/24
+exit
+interface TenGigabitEthernet8/0/0
+    enable
+    ip address 10.10.20.1/24
+exit
+
+nat ipfix logging domain 1
+nat ipfix logging src-port 4739
+nat nat64 map parameters
+    security-check enable
+exit
+
+interface TenGigabitEthernet7/0/0
+exit
+interface TenGigabitEthernet8/0/0
+exit
+
+route dynamic manager
+exit
+
+route dynamic ospf6
+exit
+
+route dynamic bgp
+    disable
+exit
+
+route dynamic ospf
+exit
+
+route dynamic rip
+exit
+
+dhcp4 server
+    lease persist true
+    lease lfc-interval 3600
+    interface socket raw
+exit
+
+unbound server
+    enable ip4
+    enable tcp
+    enable udp
+    enable harden glue
+    enable hide identity
+    port outgoing range 4096
+exit
+
+snmp host disable
+\end{lstlisting}
+
+\section{25 Gbps IMIX}
+
+\begin{lstlisting}
+configuration history enable
+
+nacm disable
+nacm read-default deny
+nacm write-default deny
+nacm exec-default deny
+nacm group admin
+    member root
+    member tnsr
+exit
+nacm rule-list admin-rules
+    group admin
+    rule permit-all
+        module *
+        access-operations *
+        action permit
+    exit
+exit
+nacm enable
+
+dataplane ethernet default-mtu 1500
+dataplane dpdk dev 0000:05:00.0 network num-rx-queues 2
+dataplane dpdk dev 0000:05:00.0 network num-tx-queues 2
+dataplane dpdk dev 0000:06:00.0 network num-rx-queues 2
+dataplane dpdk dev 0000:06:00.0 network num-tx-queues 2
+dataplane dpdk uio-driver igb_uio
+dataplane buffers buffers-per-numa 32768
+dataplane statseg heap-size 96M
+
+
+nat global-options nat44 max-translations-per-thread 128000
+nat global-options nat44 enabled false
+
+route table ipv4-VRF:0
+    id 0
+exit
+
+
+interface HundredGigabitEthernet5/0/0
+    enable
+    ip address 10.10.10.100/24
+exit
+interface HundredGigabitEthernet6/0/0
+    enable
+    ip address 10.10.20.100/24
+exit
+
+nat ipfix logging domain 1
+nat ipfix logging src-port 4739
+nat nat64 map parameters
+    security-check enable
+exit
+
+route table ipv4-VRF:0
+    id 0
+    route 16.0.0.0/16
+        next-hop 5 via 10.10.10.101
+    exit
+    route 48.0.0.0/16
+        next-hop 6 via 10.10.20.101
+    exit
+    route 48.115.0.0/16
+        next-hop 1 via 10.10.10.101
+    exit
+    route 97.233.0.0/16
+        next-hop 2 via 10.10.20.101
+    exit
+exit
+
+
+interface HundredGigabitEthernet5/0/0
+exit
+interface HundredGigabitEthernet6/0/0
+exit
+
+route dynamic manager
+exit
+
+route dynamic ospf6
+exit
+
+route dynamic bgp
+    disable
+exit
+
+route dynamic ospf
+exit
+
+route dynamic rip
+exit
+
+dhcp4 server
+    lease persist true
+    lease lfc-interval 3600
+    interface socket raw
+exit
+
+unbound server
+    enable ip4
+    enable tcp
+    enable udp
+    enable harden glue
+    enable hide identity
+    port outgoing range 4096
+exit
+
+snmp host disable
+\end{lstlisting}
+
+\section{TRex 25 Gbps IMIX}
+
+\begin{lstlisting}
+-Per port stats table 
+      ports |               0 |               1 
+ -----------------------------------------------------------------------------------------
+   opackets |      7171065817 |      9308315110 
+     obytes |   2273140861735 |   7338223064797 
+   ipackets |      9176666445 |      7110502048 
+     ibytes |   7236145304759 |   2253798106905 
+    ierrors |               0 |               0 
+    oerrors |               0 |               0 
+      Tx Bw |       5.94 Gbps |      19.16 Gbps 
+
+-Global stats enabled 
+ Cpu Utilization : 41.8  %  30.0 Gb/core 
+ Platform_factor : 1.0  
+ Total-Tx        :      25.11 Gbps  
+ Total-Rx        :      24.86 Gbps  
+ Total-PPS       :       5.38 Mpps  
+ Total-CPS       :     103.07 Kcps  
+
+ Expected-PPS    :       5.38 Mpps  
+ Expected-CPS    :     103.07 Kcps  
+ Expected-BPS    :      25.10 Gbps  
+
+ Active-flows    :   106534  Clients :      511   Socket-util : 0.3869 %    
+ Open-flows      : 316342112  Servers :     5621   Socket :   124524 Socket/Clients :  243.7 
+ drop-rate       :       0.00  bps   
+ current time    : 3070.7 sec  
+ test duration   : 529.3 sec  
+
+-Latency stats enabled 
+ Cpu Utilization : 0.1 %  
+ if|   tx_ok , rx_ok  , rx check ,error,       latency (usec) ,    Jitter          max window 
+   |         ,        ,          ,     ,   average   ,   max  ,    (usec)                     
+ ---------------------------------------------------------------------------------------------------------------- 
+ 0 |  3069370, 2989709,         0,26437,         30  ,  120142,       8      |  74  934  57  60  83  74  62  199  5856  156  56  173  70 
+ 1 |  3069370, 3036630,         0, 6373,         39  ,  120260,       4      |  37  960  785  575  559  8140  7660  764  5804  889  5658  184  5874
+\end{lstlisting}
